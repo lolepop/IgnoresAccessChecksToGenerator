@@ -6,7 +6,8 @@
     <authors>aelij</authors>
     <owners>aelij</owners>
     <license type="expression">MIT</license>
-    <projectUrl>https://github.com/aelij/IgnoresAccessChecksToGenerator</projectUrl>
+    <projectUrl>https://github.com/lolepop/IgnoresAccessChecksToGenerator</projectUrl>
+    <repository type="git" url="https://github.com/lolepop/IgnoresAccessChecksToGenerator.git"/>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Generates IgnoresAccessChecksTo attributes and reference assemblies to allow compile-time access to internals</description>
     <releaseNotes></releaseNotes>
