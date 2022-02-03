@@ -129,42 +129,23 @@ namespace System.Runtime.CompilerServices
             {
                 foreach (var type in module.GetTypes().Where(type=>!types.Contains(type.FullName)))
                 {
-                    if (!type.IsNested && type.IsNotPublic)
-                    {
-                        type.IsPublic = true;
-                    }
-                    else if (type.IsNestedAssembly ||
-                             type.IsNestedFamilyOrAssembly ||
-                             type.IsNestedFamilyAndAssembly)
-                    {
-                        type.IsNestedPublic = true;
-                    }
+                    if (type.IsNested)
+                        type.Attributes = (type.Attributes & ~TypeAttributes.NestedPrivate) | TypeAttributes.NestedPublic;
+                    else
+                        type.Attributes = (type.Attributes & ~TypeAttributes.NotPublic) | TypeAttributes.Public;
 
                     foreach (var field in type.Fields)
-                    {
-                        if (field.IsAssembly ||
-                            field.IsFamilyOrAssembly ||
-                            field.IsFamilyAndAssembly)
-                        {
-                            field.IsPublic = true;
-                        }
-                    }
-
+                        field.Attributes = (field.Attributes & ~FieldAttributes.Private) | FieldAttributes.Public;
+                    
                     foreach (var method in type.Methods)
                     {
+                        method.Attributes = (method.Attributes & ~MethodAttributes.Private) | MethodAttributes.Public;
                         if (UseEmptyMethodBodies && method.HasBody)
                         {    
                             var emptyBody = new Mono.Cecil.Cil.MethodBody(method);
                             emptyBody.Instructions.Add(Mono.Cecil.Cil.Instruction.Create(Mono.Cecil.Cil.OpCodes.Ldnull));
                             emptyBody.Instructions.Add(Mono.Cecil.Cil.Instruction.Create(Mono.Cecil.Cil.OpCodes.Throw));
                             method.Body = emptyBody;
-                        }
-
-                        if (method.IsAssembly ||
-                            method.IsFamilyOrAssembly ||
-                            method.IsFamilyAndAssembly)
-                        {
-                            method.IsPublic = true;
                         }
                     }
                 }
